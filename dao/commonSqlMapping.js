@@ -1,0 +1,17 @@
+// CRUD SQL语句
+
+var common = {
+	getAllItem: 'select a.id,a.name,object_classification.name as object_classification_name,object_classification.id as object_classification_id,a.abstract,b.usable,b.lend,b.repair from (select id,name,abstract,object_classification_id from item ) a join (select item_id,sum(case when status = 0 then 1 else 0 end) as usable,sum(case when status = 1 then 1 else 0 end) as lend,sum(case when status = 2 then 1 else 0 end) as repair from object group by item_id ) b on a.id=b.item_id INNER JOIN object_classification on a.object_classification_id = object_classification.id',
+	getAllClassification: 'select id,name from object_classification',
+	// getItemByClassification: 'SELECT * from ( select a.name,object_classification.name as object_classification_name,object_classification.id as object_classification_id,a.abstract,b.usable,b.lend,b.repair from (select id,name,abstract,object_classification_id from item ) a join (select item_id,sum(case when status = 0 then 1 else 0 end) as usable,sum(case when status = 1 then 1 else 0 end) as lend,sum(case when status = 2 then 1 else 0 end) as repair from object group by item_id ) b on a.id=b.item_id INNER JOIN object_classification on a.object_classification_id = object_classification.id )c where c.object_classification_id=?',
+	// queryItem: 'select item.name,item.abstract,item.content,item.object_classification_id,object_classification.name as object_classification_name,a.usable,a.lend,a.repair from item INNER JOIN object_classification on item.object_classification_id = object_classification.id INNER JOIN (select item_id,sum(case when status = 0 then 1 else 0 end) as usable,sum(case when status = 1 then 1 else 0 end) as lend,sum(case when status = 2 then 1 else 0 end) as repair from object group by item_id) a ON item.id = a.item_id AND (item.name LIKE concat("%",?,"%"))',
+	getItemDetail: 'select * from (select object.id,a.name,object.`status`,lending.return_time,`repair`.finish_time,object_classification.`name` as object_classification_name,a.content,a.id as item_id from (select item.id,item.name,item.content,item.object_classification_id from item GROUP BY name) a INNER JOIN object_classification ON a.object_classification_id = object_classification.id INNER JOIN object ON a.id =object.item_id Left JOIN lending ON object.id = lending.object_id LEFT JOIN repair ON object.id = repair.object_id ) b where b.name = ?',
+	getItemMsg: 'select item.id,item.name,item.abstract,item.content,item.object_classification_id,object_classification.name as object_classification_name from item INNER JOIN object_classification on item.object_classification_id = object_classification.id where item.id = ?',
+	getItemList: 'select item.id,item.name,item.abstract,item.content,item.object_classification_id,object_classification.name as object_classification_name from item INNER JOIN object_classification on item.object_classification_id = object_classification.id',
+	editItem: 'update item set name=?, abstract=?, content=?, object_classification_id=? where id=? ',
+	addItem: 'insert into item(id,name,abstract,content,object_classification_id) values(0,?,?,?,?)',
+	deleteItem: 'delete from item where id = ?',
+
+};
+
+module.exports = common;

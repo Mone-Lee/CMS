@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>   
+		<meta charset="UTF-8"> 
+		<link rel='stylesheet' href='/stylesheets/normalize.css' />
+		<link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+		   	var socket = io.connect('http://127.0.0.1:3000');
+		   	// socket.on()
+		   	socket.on('connect', function () {
+				socket.on('message', function (msg) {
+					alert(msg);
+				})
+			})
+			socket.emit('errorMsg', 'wrong!');
+		</script>
+		<title>实验室资产管理系统</title>
+	</head>
+	<body>  
+		<div id="app"></div>
+
+	</body>
+
+</html>
